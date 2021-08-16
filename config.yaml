@@ -4,5 +4,10 @@ sra_file: "data/SraRunTable/SraRunTable.csv"
 
 # RecSearch
 query_file: "data/input/queries.fasta"
+## Query and reverse types should be either "prot" or "nuc" for now
 query_type: "prot"
+reverse_type: "nuc"
+## BLAT is best-implemented; BLAST has also been implemented, but not tested in many commits
+query_algo: "blat"
+reverse_algo: "blat"
 
