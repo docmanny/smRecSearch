@@ -17,7 +17,7 @@ from RecBlast.RecBlast import RecSearch
 @click.option("-ps", "--perc-score", type=str)
 @click.option("-pi", "--perc-identity", type=str)
 @click.option("-pq", "--perc-query-span", type=str)
-@click.option("--annotation_lookup_tsv", type=str)
+@click.option("--annotation_lookup_tsv", type=str, default = "")
 @click.option("--output-root", type=str, default="./output")
 def __main__(query_file, forward_port, forward_species, forward_twobit,
              reverse_port, reverse_species, reverse_twobit, query_file_type="fasta",
@@ -54,9 +54,16 @@ def __main__(query_file, forward_port, forward_species, forward_twobit,
     recblast.reverse_search_settings['database'] = {reverse_species: str(reverse_twobit.name)}
     recblast.reverse_search_settings['database_path'] = str(reverse_twobit.parent)
     recblast.reverse_search_settings['database_port'] = {reverse_species: reverse_port}
-    recblast.set_translation_annotation_parameters(method="table", key_value_order=False,
-                                                   tsv_location=annotation_lookup_tsv)
-    recblast(run_name="{0}-pcScore{1}_pcIdent{2}_pcQuerySpan{3}_reverse-{4}".format(Path(query_file).stem, perc_score, perc_identity, perc_query_span, reverse_twobit.stem),
+    if annotation_lookup_tsv:
+        recblast.set_translation_annotation_parameters(method="table", key_value_order=False,
+                                                    tsv_location=annotation_lookup_tsv)
+    else:
+        recblast.set_translation_annotation_parameters(method=False)
+    recblast(run_name="{0}-pcScore{1}_pcIdent{2}_pcQuerySpan{3}_reverse-{4}".format(Path(query_file).stem, 
+                                                                                    perc_score, 
+                                                                                    perc_identity, 
+                                                                                    perc_query_span, 
+                                                                                    reverse_twobit.stem),
              output_type="bed-complete",
              output_location=output_location)
     
