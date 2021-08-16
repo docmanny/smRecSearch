@@ -14,16 +14,20 @@ from RecBlast.RecBlast import RecSearch
 @click.option("-ft", "--forward-twobit", type=click.Path(exists=False))
 @click.option("-rs", "--reverse-species", type=str)
 @click.option("-rt", "--reverse-twobit", type=click.Path(exists=False))
-@click.option("-ps", "--perc-score", type=str)
-@click.option("-pi", "--perc-identity", type=str)
-@click.option("-pq", "--perc-query-span", type=str)
+@click.option("-ps", "--perc-score", type=str, default= "0.1")
+@click.option("-pi", "--perc-identity", type=str, default = "0.5")
+@click.option("-pq", "--perc-query-span", type=str, default = "0.5")
+@click.option("--query_type", type=str, default = "prot")
+@click.option("--reverse_type", type=str, default = "nuc")
+@click.option("--forward_algo", type=str, default = "blat")
+@click.option("--reverse_algo", type=str, default = "blat")
+
 @click.option("--annotation_lookup_tsv", type=str, default = "")
 @click.option("--output-root", type=str, default="./output")
 def __main__(query_file, forward_port, forward_species, forward_twobit,
-             reverse_port, reverse_species, reverse_twobit, query_file_type="fasta",
-             perc_score=0.1, perc_identity=0.5, perc_query_span=0.5, max_processes=40,
-             annotation_lookup_tsv="./output/recBlastDBPrep/hg38_geneAcc_hashTable.tsv",
-             output_root = "./output"):
+             reverse_port, reverse_species, reverse_twobit, query_type, reverse_type, forward_algo, reverse_algo,
+             perc_score, perc_identity, perc_query_span, query_file_type, max_processes,
+             annotation_lookup_tsv, output_root):
     perc_score = float(perc_score)
     perc_identity = float(perc_identity)
     perc_query_span = float(perc_query_span)
