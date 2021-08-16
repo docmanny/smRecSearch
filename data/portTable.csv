@@ -331,6 +331,8 @@
 30314,20314,"melGal1","Turkey","Meleagris gallopavo"
 30315,20315,"geoFor1","Medium ground finch","Geospiza fortis"
 30316,20316,"melUnd1","Budgerigar","Melopsittacus undulatus"
+30317,20317,"bTaeGut1","Zebra finch","Taeniopygia guttata"
+30318,20318,"bCalAnn1","Anna's hummingbird","Calypte anna"
 "#","HiC Genomes",,,
 30317,20317,"Cavpor3.0_HiC","Guinea pig (DNAZoo)","Cavia porcellus"
 30318,20318,"CerSimSim1.0_HiC","White rhinoceros (DNAZoo)","Ceratotherium simum"

@@ -50,6 +50,28 @@ def filtered_beds(wildcards):
         final_guide = []
     return final_list + final_guide
 
+
+def translated_BLAT_db_type(query_type, db_type):
+    """ Only returns true if the query is Protein and DB is DNA. Note that in the case of query=DNA and db=prot, gfClient is the one that has to implement dnax"""
+    # a bit of cleaning
+    query_type = query_type.lower()
+    db_type = db_type.lower()
+    if query_type == "dna":
+        if db_type == "prot":
+            return False
+        elif db_type == "dna":
+            return False
+        else:
+            raise Exception("Unknown search database type! Allowed options are 'dna' or 'prot'")
+    elif query_type == "prot":
+        if db_type == "prot":
+            return False
+        elif db_type == "dna":
+            return True
+        else:
+            raise Exception("Unknown search database type! Allowed options are 'dna' or 'prot'")
+    else:
+        raise Exception("Unknown search sequence type! Allowed options are 'dna' or 'prot'")
 # Parameters
 
 # Output Directories
@@ -57,7 +79,7 @@ def filtered_beds(wildcards):
 
 # Log Directories
 
-rule RBHB:
+rule RBHB_loxAfr3:
     input:
         expand("output/{genome}/{query}-pcScore{pc_score}_pcIdent{pc_ident}_pcQuerySpan{pc_qspan}_reverse-{rgenome}/filtered/{genome}_evidenced.bed",
                genome="loxAfr3", query="AvA", pc_score = 0.1, pc_ident = 0.8, pc_qspan = 0.5, rgenome = "hg38_maskRep_noVarChr_fragWithGenes")
@@ -88,20 +110,47 @@ rule start_untranslated_gfServer:
     shell:
         "./code/start_Untranslated_gfServer.sh {wildcards.genome} {output} {params.twobitdir} > {log}"
 
+def get_portfile_forward(wildcards):
+    trans = translated_BLAT_db_type(config["query_type"], config["forward_db_type"])
+    if trans:
+        return "{path}/translated-{genome}".format(path=dir_flags, genome = wildcards.genome)
+    else:
+        return "{path}/untranslated-{genome}".format(path=dir_flags, genome = wildcards.genome)
+
+def get_portfile_reverse(wildcards):
+    trans = translated_BLAT_db_type(config["forward_db_type"], config["reverse_db_type"])
+    if trans:
+        return "{path}/translated-{genome}".format(path=dir_flags, genome = wildcards.rgenome)
+    else:
+        return "{path}/untranslated-{genome}".format(path=dir_flags, genome = wildcards.rgenome)
+
+
 rule RecBlat:
     input:
         qfile = ancient("data/input/{query}.fa"),
         forwardTwoBitFile=ancient("{rpath}/{path}/{{genome}}{extension}".format(rpath = os.getcwd(), path=dir_2bit, extension = ".2bit")),
         reverseTwoBitFile=ancient("{rpath}/{path}/{{rgenome}}{extension}".format(rpath = os.getcwd(), path=dir_2bit, extension = ".2bit")),
-        tportfile = ancient("{path}/translated-{{genome}}".format(path=dir_flags)),
-        utportfile = ancient("{path}/untranslated-{{rgenome}}".format(path=dir_flags)),
-        annoTable = ancient("output/recBlastDBPrep/hg38_geneAcc_hashTable.tsv")
+        tportfile = get_portfile_forward,
+        utportfile = get_portfile_reverse
     output:
         protected("output/{genome}/{query}-pcScore{pc_score}_pcIdent{pc_ident}_pcQuerySpan{pc_qspan}_reverse-{rgenome}/output/{genome}_RecBlastOutput.bed")
     params:
-        tport = lambda wildcards, df=pt: get_port_for_genome(df, wildcards.genome, translated=True),
-        utport = lambda wildcards, df=pt: get_port_for_genome(df, wildcards.rgenome, translated=False)
-    threads: 10
+        tport = lambda wildcards, df=pt: get_port_for_genome(df, 
+                                                             wildcards.genome, 
+                                                             translated=translated_BLAT_db_type(config["query_type"], 
+                                                                                                config["forward_db_type"])),
+        utport = lambda wildcards, df=pt: get_port_for_genome(df, 
+                                                              wildcards.rgenome, 
+                                                              translated=translated_BLAT_db_type(config["forward_db_type"], 
+                                                                                                 config["reverse_db_type"])),
+        query_type = config["query_type"],
+        reverse_type = config["reverse_type"],
+        forward_algo = config["forward_algo"],
+        reverse_algo = config["reverse_algo"],
+        reverse_db_type = config["reverse_db_type"],
+        forward_db_type = config["forward_db_type"],
+        annoTable = "".join(("--annotation_lookup_tsv ", config["anno_table"])) if config["anno_table"] else ""
+    threads: 40
     log: "logs/RBB/{genome}/{query}-pcScore{pc_score}_pcIdent{pc_ident}_pcQuerySpan{pc_qspan}_reverse-{rgenome}/output/{genome}_RecBlastOutput.log"
     group: "recBlat"
     conda: "../envs/conda_recBlat.yaml"
@@ -114,15 +163,20 @@ rule RecBlat:
         "--forward-twobit {input.forwardTwoBitFile} "
         "--reverse-species 'Homo sapiens' "
         "--reverse-twobit {input.reverseTwoBitFile} "
-        "--annotation_lookup_tsv {input.annoTable} "
+        "{params.annoTable} "
         "--perc-score {wildcards.pc_score} "
+        "--query_type {params.query_type} "
+        "--reverse_type {params.reverse_type} "
+        "--forward_algo {params.forward_algo} "
+        "--reverse_algo {params.reverse_algo} "
+        "--forward_db_type {params.forward_db_type} "
+        "--reverse_db_type {params.reverse_db_type} "
         "--perc-identity {wildcards.pc_ident} "
         "--perc-query-span {wildcards.pc_qspan} "
         "--max-processes {threads}; "
-        "sed -i.bak 's/, /,/g' {output}; "
-        "rm {input.tportfile}; " 
-        "rm {input.utportfile}"         
+        "sed -i.bak 's/, /,/g' {output}"
         ") 2> {log}"
+
 
 rule reciprocalBestHits:
     input:
