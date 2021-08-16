@@ -149,7 +149,8 @@ rule RecBlat:
         reverse_algo = config["reverse_algo"],
         reverse_db_type = config["reverse_db_type"],
         forward_db_type = config["forward_db_type"],
-        annoTable = "".join(("--annotation_lookup_tsv ", config["anno_table"])) if config["anno_table"] else ""
+        annoTable = "".join(("--annotation_lookup_tsv ", config["anno_table"])) if config["anno_table"] else "",
+        verbose = config["verbose"] if config["verbose"] else "v"
     threads: 40
     log: "logs/RBB/{genome}/{query}-pcScore{pc_score}_pcIdent{pc_ident}_pcQuerySpan{pc_qspan}_reverse-{rgenome}/output/{genome}_RecBlastOutput.log"
     group: "recBlat"
