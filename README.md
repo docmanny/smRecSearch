@@ -1,21 +1,17 @@
-Pervasive duplication of tumor suppressors in Afrotherians during the evolution of large bodies and reduced cancer risk
-=====
+smRecSearch
+===
+
+A [Snakemake](https://snakemake.readthedocs.io) implementation of [RecSearch](https://github.com/docmanny/smRecSearch)
+---
+
+## Featured in: 
+
 <a content="https://www.biorxiv.org/content/10.1101/2020.09.10.291906v1" href="https://www.biorxiv.org/content/10.1101/2020.09.10.291906v1" rel="me noopener noreferrer" style="vertical-align:center;"><img alt="bioRxiv" src="https://www.biorxiv.org/sites/default/files/bioRxiv_article.jpg"><a/>
 
-This is the home of the reproducible manuscript for our publication. Here, you will find the instructions for how to properly set up your system to reproduce our results.
+<a content="https://elifesciences.org/articles/65041" href="https://elifesciences.org/articles/65041" rel="me noopener noreferrer" style="vertical-align:center;"><img alt="eLife" src="https://elifesciences.org/assets/patterns/img/patterns/organisms/elife-logo-xs.fd623d00.svg"><a/>
 
-Authors
------
-* **Juan M Vazquez**
-<a itemprop="sameAs" content="https://orcid.org/0000-0001-8341-2390" href="https://orcid.org/0000-0001-8341-2390" target="orcid.widget" rel="me noopener noreferrer" style="vertical-align:top;"><img src="https://orcid.org/sites/default/files/images/orcid_16x16.png" style="width:1em;margin-right:.5em;" alt="ORCID iD icon"></a>[![alt text][1.2]][mainmanmanny] [:globe_with_meridians:](https://vazquez.bio)  
-*Department of Integrative Biology, University of California - Berkeley*
-* **Vincent J Lynch** <a itemprop="sameAs" content="https://orcid.org/0000-0001-5311-3824" href="https://orcid.org/0000-0001-5311-3824" target="orcid.widget" rel="me noopener noreferrer" style="vertical-align:top;"><img src="https://orcid.org/sites/default/files/images/orcid_16x16.png" style="width:1em;margin-right:.5em;" alt="ORCID iD icon"></a>[![alt text][1.2]][devoevomed] [:globe_with_meridians:](https://arts-sciences.buffalo.edu/biological-sciences/faculty/faculty-directory/vincent-lynch.html) [:e-mail:](mailto:vjlynch@buffalo.edu)  
-*Department of Biology, SUNY Buffalo*
 
-Abstract
-----
-
->The risk of developing cancer is correlated with body size and lifespan within species. Between species, however, there is no correlation between cancer and either body size or lifespan, indicating that large, long-lived species have evolved enhanced cancer protection mechanisms. Elephants and their relatives (Proboscideans) are a particularly interesting lineage for the exploration of mechanisms underlying the evolution of augmented cancer resistance because they evolved large bodies recently and are closely related to smaller bodied species (Afrotherians). Here, we explore the contribution of gene duplication to body size and cancer risk in Afrotherians. Unexpectedly, we found that tumor suppressor duplication was pervasive in Afrotherian genomes, rather than restricted to Proboscideans. Proboscideans, however, have unique duplicates in pathways that may underlie some aspects of their remarkable anti-cancer cell biology. These data suggest that duplication of tumor suppressor genes facilitated the evolution of increased body size by compensating for increased cancer risk.
+What follows is a use case of `smRecSearch` as documented in the [GitHub Repo](https://github.com/docmanny/atlantogenataGeneDuplication) for Vazquez and Lynch (2021).
 
 System Requirements
 ---
